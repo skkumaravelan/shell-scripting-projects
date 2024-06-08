@@ -1,17 +1,21 @@
 #!/bin/bash
 
-helper "$@"
+# Function to check the expected number of command-line arguments
+function helper {
+    expected_cmd_args=2
+    if [ $# -ne $expected_cmd_args ]; then
+        echo "Please execute the script with the required number of command-line arguments."
+        echo "Usage: $0 <repo_owner> <repo_name>"
+        exit 1
+    fi
+}
 
 # GitHub API URL
 API_URL="https://api.github.com"
 
 # GitHub username and personal access token
-USERNAME=$username
-TOKEN=$token
-
-# User and Repository information
-REPO_OWNER=$1
-REPO_NAME=$2
+USERNAME=${username}
+TOKEN=${token}
 
 # Function to make a GET request to the GitHub API
 function github_api_get {
@@ -38,18 +42,12 @@ function list_users_with_read_access {
     fi
 }
 
-function helper {
-expected_cmd_args=2
-    if [ $# -ne $expected_cmd_args ]; then
-        echo "Please execute the script with the required number of command-line arguments."
-        echo "Usage: $0 <repo_owner> <repo_name>"
-        exit 1
-    fi
-
-}
-
-
 # Main script
+helper "$@"
+
+# User and Repository information
+REPO_OWNER=$1
+REPO_NAME=$2
 
 echo "Listing users with read access to ${REPO_OWNER}/${REPO_NAME}..."
 list_users_with_read_access
